@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05080d">
+  <title>UFN Systems // Autoconnect Generator</title>
+  <style>
+    :root {
+      --bg: #05080d;
+      --bg2: #071019;
+      --panel: rgba(8, 17, 26, .94);
+      --panel2: rgba(10, 25, 37, .92);
+      --cyan: #1fb7df;
+      --cyan2: #70d8f1;
+      --cyan3: #0d7192;
+      --text: #e9f7fb;
+      --muted: #7d9aa7;
+      --line: rgba(31,183,223,.42);
+      --line-strong: rgba(31,183,223,.78);
+      --good: #72e8b7;
+      --warn: #f3c763;
+      --danger: #ff8e8e;
+      --shadow: 0 0 0 1px rgba(31,183,223,.08), 0 24px 60px rgba(0,0,0,.5);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { min-height: 100%; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "Arial Narrow", "Roboto Condensed", "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 70% 8%, rgba(31,183,223,.055), transparent 28rem),
+        linear-gradient(180deg, rgba(2,5,9,.66), rgba(3,7,12,.96)),
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.012) 3px 4px),
+        #03070b;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent 49.8%, rgba(31,183,223,.025) 50%, transparent 50.2%),
+        linear-gradient(0deg, transparent 49.8%, rgba(31,183,223,.018) 50%, transparent 50.2%);
+      background-size: 88px 88px;
+      opacity: .45;
+    }
+
+    .shell {
+      width: min(1280px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 22px 0 48px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 22px;
+      align-items: center;
+      min-height: 118px;
+      border-top: 1px solid rgba(31,183,223,.2);
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(6,12,19,.6), rgba(4,8,13,.35));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .topbar::after {
+      content: "";
+      position: absolute;
+      height: 3px;
+      left: 120px;
+      right: 34%;
+      bottom: -1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      box-shadow: 0 0 18px rgba(31,183,223,.8);
+    }
+
+    .ufn-mark {
+      width: 104px;
+      height: 104px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      color: white;
+      filter: drop-shadow(0 0 11px rgba(31,183,223,.35));
+    }
+
+    .ufn-mark::before,
+    .ufn-mark::after {
+      content: "";
+      position: absolute;
+      border: 2px solid #dbe8ed;
+      transform: rotate(45deg);
+    }
+
+    .ufn-mark::before {
+      width: 56px;
+      height: 56px;
+      border-width: 3px;
+    }
+
+    .ufn-mark::after {
+      width: 76px;
+      height: 76px;
+      border-color: rgba(31,183,223,.55);
+    }
+
+    .ufn-mark span {
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 1.18rem;
+      font-weight: 900;
+      letter-spacing: .1em;
+      z-index: 2;
+      transform: translateX(2px);
+    }
+
+    .identity small,
+    .eyebrow,
+    label,
+    .result-label,
+    .status-chip {
+      text-transform: uppercase;
+      letter-spacing: .13em;
+    }
+
+    .identity small {
+      display: block;
+      color: var(--muted);
+      font-size: .72rem;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 3vw, 3rem);
+      line-height: .95;
+      font-weight: 850;
+      letter-spacing: -.03em;
+      text-transform: uppercase;
+    }
+
+    .status-chip {
+      min-width: 188px;
+      border-left: 1px solid var(--line);
+      padding: 10px 0 10px 24px;
+      color: var(--cyan2);
+      font-size: .76rem;
+      text-align: right;
+    }
+
+    .status-chip strong {
+      display: block;
+      color: var(--text);
+      font-size: 1rem;
+      margin-top: 6px;
+      letter-spacing: .08em;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 22px;
+      margin-top: 26px;
+      align-items: start;
+    }
+
+    .panel {
+      position: relative;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(145deg, rgba(13,33,47,.72), rgba(5,13,21,.88)),
+        var(--panel);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel::before,
+    .panel::after {
+      content: "";
+      position: absolute;
+      width: 34px;
+      height: 34px;
+      pointer-events: none;
+    }
+
+    .panel::before {
+      left: -1px; top: -1px;
+      border-left: 3px solid var(--cyan);
+      border-top: 3px solid var(--cyan);
+    }
+
+    .panel::after {
+      right: -1px; bottom: -1px;
+      border-right: 3px solid var(--cyan);
+      border-bottom: 3px solid var(--cyan);
+    }
+
+    .panel-head {
+      min-height: 56px;
+      padding: 15px 18px 13px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      background: linear-gradient(90deg, rgba(31,183,223,.08), transparent 70%);
+    }
+
+    .eyebrow {
+      color: var(--cyan2);
+      font-size: .72rem;
+      font-weight: 800;
+    }
+
+    .panel-number {
+      color: rgba(112,216,241,.38);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: .75rem;
+    }
+
+    form { padding: 20px; }
+
+    .field { margin-bottom: 18px; }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      color: #cfeef6;
+      font-size: .74rem;
+      font-weight: 800;
+    }
+
+    label span {
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: .02em;
+    }
+
+    input {
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid rgba(31,183,223,.48);
+      border-radius: 0;
+      padding: 12px 14px;
+      color: var(--text);
+      background:
+        linear-gradient(90deg, rgba(31,183,223,.055), transparent 35%),
+        #06101a;
+      outline: none;
+      font: 600 16px/1.2 "Segoe UI", Arial, sans-serif;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    input::placeholder { color: #54707d; }
+
+    input:focus {
+      border-color: var(--cyan2);
+      box-shadow: inset 3px 0 0 var(--cyan), 0 0 0 2px rgba(31,183,223,.09);
+      background: #071521;
+    }
+
+    .actions,
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      min-height: 48px;
+      border: 1px solid var(--line-strong);
+      border-radius: 0;
+      padding: 0 20px;
+      cursor: pointer;
+      font: 800 .78rem/1 "Segoe UI", Arial, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      transition: transform .08s ease, background .15s ease, color .15s ease, box-shadow .15s ease;
+    }
+
+    button:active { transform: translateY(1px); }
+
+    .primary {
+      color: #031017;
+      background: linear-gradient(180deg, #77ddf2, #24a9cf);
+      box-shadow: 0 0 18px rgba(31,183,223,.16);
+    }
+
+    .primary:hover {
+      background: linear-gradient(180deg, #9aeafa, #3db9dd);
+      box-shadow: 0 0 22px rgba(31,183,223,.28);
+    }
+
+    .secondary {
+      color: var(--cyan2);
+      background: rgba(8,26,38,.82);
+    }
+
+    .secondary:hover { background: rgba(13,43,59,.95); }
+
+    .form-note {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: .8rem;
+      line-height: 1.55;
+    }
+
+    .form-note strong { color: #cfeef6; }
+
+    .error {
+      display: none;
+      margin-top: 16px;
+      border-left: 3px solid var(--danger);
+      padding: 11px 13px;
+      color: var(--danger);
+      background: rgba(255,80,80,.055);
+      font-size: .86rem;
+    }
+
+    .preview {
+      min-height: 392px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-idle {
+      margin: auto 0;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .target {
+      width: 132px;
+      height: 132px;
+      margin: 0 auto 20px;
+      border: 1px solid rgba(31,183,223,.45);
+      border-radius: 50%;
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .target::before,
+    .target::after {
+      content: "";
+      position: absolute;
+      inset: 17px;
+      border: 1px solid rgba(31,183,223,.25);
+      transform: rotate(45deg);
+    }
+
+    .target::after {
+      inset: 34px;
+      border-color: rgba(31,183,223,.5);
+    }
+
+    .target b {
+      color: var(--cyan2);
+      font-size: .78rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      z-index: 1;
+    }
+
+    .preview-idle p {
+      margin: 0 auto;
+      max-width: 420px;
+      line-height: 1.55;
+      font-size: .92rem;
+    }
+
+    .result {
+      display: none;
+      height: 100%;
+      flex-direction: column;
+    }
+
+    .result-label {
+      color: var(--cyan2);
+      font-size: .72rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .link-box {
+      width: 100%;
+      min-height: 172px;
+      resize: vertical;
+      border: 1px solid rgba(31,183,223,.42);
+      border-radius: 0;
+      padding: 14px;
+      color: #dff7fd;
+      background: #040c12;
+      font: 500 .88rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      outline: none;
+      overflow-wrap: anywhere;
+    }
+
+    .link-box:focus { border-color: var(--cyan2); }
+
+    .result-actions { margin-top: 12px; }
+
+    .copy-status {
+      min-height: 24px;
+      padding-top: 10px;
+      color: var(--good);
+      font-size: .8rem;
+      letter-spacing: .05em;
+    }
+
+    .technical {
+      margin-top: 22px;
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      color: var(--muted);
+      font-size: .75rem;
+    }
+
+    .technical strong { color: #c9dde4; }
+
+    footer {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      color: #607783;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .11em;
+    }
+
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .status-chip { display: none; }
+      .topbar { grid-template-columns: auto 1fr; }
+      .preview { min-height: 300px; }
+    }
+
+    @media (max-width: 560px) {
+      .shell { width: min(100% - 16px, 1280px); padding-top: 8px; }
+      .topbar { min-height: 92px; gap: 12px; }
+      .ufn-mark { width: 72px; height: 72px; }
+      .ufn-mark::before { width: 42px; height: 42px; }
+      .ufn-mark::after { width: 58px; height: 58px; }
+      .ufn-mark span { font-size: .88rem; }
+      .identity small { font-size: .62rem; }
+      .panel-head { padding-inline: 14px; }
+      form, .preview { padding: 15px; }
+      .actions button, .result-actions button { flex: 1 1 150px; }
+      footer { flex-direction: column; gap: 6px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="ufn-mark" aria-hidden="true"><span>UFN</span></div>
+      <div class="identity">
+        <small>United Federated Navy // Systems Access</small>
+        <h1>Autoconnect Generator</h1>
+      </div>
+      <div class="status-chip">
+        Link Service
+        <strong>ONLINE</strong>
+      </div>
+    </header>
+
+    <section class="layout" aria-label="Autoconnect link generator">
+      <article class="panel">
+        <div class="panel-head">
+          <div class="eyebrow">Connection Parameters</div>
+          <div class="panel-number">01 // INPUT</div>
+        </div>
+
+        <form id="generatorForm" novalidate>
+          <div class="field">
+            <label for="serverAddress">Server Address <span>IP or hostname</span></label>
+            <input
+              id="serverAddress"
+              name="serverAddress"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="e.g. 203.0.113.42"
+              required>
+          </div>
+
+          <div class="field">
+            <label for="serverPassword">Server Password <span>Optional</span></label>
+            <input
+              id="serverPassword"
+              name="serverPassword"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Enter server password">
+          </div>
+
+          <div class="field">
+            <label for="callsign">Callsign <span>Ship / crew callsign</span></label>
+            <input
+              id="callsign"
+              name="callsign"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="e.g. UFN-221"
+              required>
+          </div>
+
+          <div class="actions">
+            <button class="primary" type="submit">Generate Link</button>
+            <button class="secondary" id="clearButton" type="button">Clear</button>
+          </div>
+
+          <div id="errorMessage" class="error" role="alert"></div>
+
+          <p class="form-note">
+            <strong>Local processing:</strong> the generator runs entirely in your browser.
+            The values entered here are not uploaded by this page.
+          </p>
+        </form>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div class="eyebrow">Generated Link</div>
+          <div class="panel-number">02 // OUTPUT</div>
+        </div>
+
+        <div class="preview">
+          <div id="idleState" class="preview-idle">
+            <div class="target" aria-hidden="true"><b>Awaiting</b></div>
+            <p>Enter the connection parameters, then generate a deployment-ready EmptyEpsilon autoconnect URL.</p>
+          </div>
+
+          <div id="resultState" class="result">
+            <div class="result-label">Autoconnect URL // Ready</div>
+            <textarea id="generatedLink" class="link-box" readonly aria-label="Generated autoconnect URL"></textarea>
+
+            <div class="result-actions">
+              <button class="primary" id="copyButton" type="button">Copy Link</button>
+              <button class="secondary" id="selectButton" type="button">Select All</button>
+            </div>
+
+            <div id="copyStatus" class="copy-status" role="status" aria-live="polite"></div>
+
+            <div class="technical">
+              <span><strong>Endpoint:</strong> ee.ufn.systems/autoconnect.html</span>
+              <span id="charCount">0 chars</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <span>UFN Systems // EmptyEpsilon Utility</span>
+      <span>Client-side link construction</span>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      const BASE_URL = "https://ee.ufn.systems/autoconnect.html";
+      const form = document.getElementById("generatorForm");
+      const serverAddress = document.getElementById("serverAddress");
+      const serverPassword = document.getElementById("serverPassword");
+      const callsign = document.getElementById("callsign");
+      const clearButton = document.getElementById("clearButton");
+      const copyButton = document.getElementById("copyButton");
+      const selectButton = document.getElementById("selectButton");
+      const generatedLink = document.getElementById("generatedLink");
+      const idleState = document.getElementById("idleState");
+      const resultState = document.getElementById("resultState");
+      const errorMessage = document.getElementById("errorMessage");
+      const copyStatus = document.getElementById("copyStatus");
+      const charCount = document.getElementById("charCount");
+
+      function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = "block";
+      }
+
+      function clearError() {
+        errorMessage.textContent = "";
+        errorMessage.style.display = "none";
+      }
+
+      function setResult(url) {
+        generatedLink.value = url;
+        idleState.style.display = "none";
+        resultState.style.display = "flex";
+        charCount.textContent = `${url.length} chars`;
+        copyStatus.textContent = "";
+      }
+
+      function buildUrl() {
+        clearError();
+
+        const address = serverAddress.value.trim();
+        const password = serverPassword.value;
+        const shipCallsign = callsign.value.trim();
+
+        if (!address) {
+          showError("Server address is required.");
+          serverAddress.focus();
+          return null;
+        }
+
+        if (!shipCallsign) {
+          showError("Callsign is required.");
+          callsign.focus();
+          return null;
+        }
+
+        const params = new URLSearchParams();
+        params.set("serveraddress", address);
+        params.set("server_password", password);
+        params.set("callsign", shipCallsign);
+
+        return `${BASE_URL}?${params.toString()}`;
+      }
+
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return;
+        }
+
+        generatedLink.focus();
+        generatedLink.select();
+        const copied = document.execCommand("copy");
+        if (!copied) throw new Error("Copy unavailable");
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const url = buildUrl();
+        if (url) setResult(url);
+      });
+
+      clearButton.addEventListener("click", () => {
+        form.reset();
+        clearError();
+        generatedLink.value = "";
+        resultState.style.display = "none";
+        idleState.style.display = "block";
+        copyStatus.textContent = "";
+        charCount.textContent = "0 chars";
+        serverAddress.focus();
+      });
+
+      copyButton.addEventListener("click", async () => {
+        if (!generatedLink.value) return;
+
+        try {
+          await copyText(generatedLink.value);
+          copyStatus.textContent = "LINK COPIED TO CLIPBOARD";
+        } catch {
+          generatedLink.focus();
+          generatedLink.select();
+          copyStatus.textContent = "LINK SELECTED — COPY WITH CTRL+C / CMD+C";
+        }
+      });
+
+      selectButton.addEventListener("click", () => {
+        generatedLink.focus();
+        generatedLink.select();
+        copyStatus.textContent = "LINK SELECTED";
+      });
+
+      [serverAddress, serverPassword, callsign].forEach((input) => {
+        input.addEventListener("input", () => {
+          clearError();
+          copyStatus.textContent = "";
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
