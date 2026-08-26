@@ -645,7 +645,7 @@
           </div>
 
           <div class="actions">
-            <button class="primary" type="submit">Generate Link</button>
+            <button class="primary" type="submit">Generate Links</button>
             <button class="secondary" id="clearButton" type="button">Clear</button>
           </div>
 
@@ -722,8 +722,7 @@
 
       function parseCallsigns(raw) {
         const parts = raw
-          .split(/[
-,]+/)
+          .split(/[\n,]+/)
           .map(value => value.trim())
           .filter(Boolean);
 
