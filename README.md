@@ -8,8 +8,8 @@ A static browser-based utility for creating EmptyEpsilon autoconnect links in th
 
 - Server IP/address field
 - Server password field
-- Batch callsign entry (one per line or comma-separated)
-- Duplicate callsigns automatically removed
+- Batch player-name entry (each name is passed as the `callsign` value)
+- Duplicate player names automatically removed
 - Correct URL encoding
 - Individual copy button for every generated link
 - Mobile-friendly UFN Systems styling

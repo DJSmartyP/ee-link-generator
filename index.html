@@ -630,17 +630,17 @@
           </div>
 
           <div class="field">
-            <label for="callsigns">Callsigns <span>One per line, or separated by commas</span></label>
+            <label for="callsigns">Player Names <span>One per line, or separated by commas</span></label>
             <textarea
               id="callsigns"
               name="callsigns"
               class="callsign-input"
               autocomplete="off"
               spellcheck="false"
-              placeholder="UFN-221&#10;UFN-222&#10;UFN-223"
+              placeholder="Smarty"
               required></textarea>
             <div class="batch-hint">
-              Paste as many callsigns as needed. Blank lines are ignored and duplicate callsigns are only generated once.
+              Paste as many player names as needed. Each name is used as the callsign in the generated link. Blank lines are ignored and duplicate names are only generated once.
             </div>
           </div>
 
@@ -667,7 +667,7 @@
         <div class="preview">
           <div id="idleState" class="preview-idle">
             <div class="target" aria-hidden="true"><b>Awaiting</b></div>
-            <p>Enter the connection parameters and one or more callsigns, then generate all deployment-ready EmptyEpsilon autoconnect URLs at once.</p>
+            <p>Enter the connection parameters and one or more player names, then generate all deployment-ready EmptyEpsilon autoconnect URLs at once.</p>
           </div>
 
           <div id="resultState" class="result">
@@ -778,7 +778,7 @@
         textarea.className = "result-url";
         textarea.readOnly = true;
         textarea.value = url;
-        textarea.setAttribute("aria-label", `Autoconnect URL for ${callSign}`);
+        textarea.setAttribute("aria-label", `Autoconnect URL for player ${callSign}`);
 
         const actions = document.createElement("div");
         actions.className = "result-item-actions";
@@ -856,7 +856,7 @@
         }
 
         if (!ships.length) {
-          showError("Enter at least one callsign.");
+          showError("Enter at least one player name.");
           callsigns.focus();
           return;
         }
