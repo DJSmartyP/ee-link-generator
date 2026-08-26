@@ -247,7 +247,8 @@
       letter-spacing: .02em;
     }
 
-    input {
+    input,
+    .callsign-input {
       width: 100%;
       min-height: 52px;
       border: 1px solid rgba(31,183,223,.48);
@@ -262,9 +263,11 @@
       transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
     }
 
-    input::placeholder { color: #54707d; }
+    input::placeholder,
+    .callsign-input::placeholder { color: #54707d; }
 
-    input:focus {
+    input:focus,
+    .callsign-input:focus {
       border-color: var(--cyan2);
       box-shadow: inset 3px 0 0 var(--cyan), 0 0 0 2px rgba(31,183,223,.09);
       background: #071521;
@@ -379,6 +382,119 @@
       max-width: 420px;
       line-height: 1.55;
       font-size: .92rem;
+    }
+
+
+    .callsign-input {
+      width: 100%;
+      min-height: 132px;
+      resize: vertical;
+      border: 1px solid rgba(31,183,223,.48);
+      border-radius: 0;
+      padding: 12px 14px;
+      color: var(--text);
+      background:
+        linear-gradient(90deg, rgba(31,183,223,.055), transparent 35%),
+        #06101a;
+      outline: none;
+      font: 600 16px/1.45 "Segoe UI", Arial, sans-serif;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    .batch-hint {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: .76rem;
+      line-height: 1.45;
+    }
+
+    .result-summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 11px;
+      border-bottom: 1px solid rgba(31,183,223,.25);
+    }
+
+    .result-count {
+      color: var(--text);
+      font-size: .95rem;
+      font-weight: 800;
+      letter-spacing: .04em;
+    }
+
+    .result-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .result-item {
+      border: 1px solid rgba(31,183,223,.32);
+      background:
+        linear-gradient(90deg, rgba(31,183,223,.055), transparent 42%),
+        rgba(3,11,17,.72);
+      padding: 13px;
+    }
+
+    .result-item-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 9px;
+    }
+
+    .result-callsign {
+      min-width: 0;
+      color: var(--cyan2);
+      font-size: .78rem;
+      font-weight: 900;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      overflow-wrap: anywhere;
+    }
+
+    .result-index {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font: 700 .7rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .result-url {
+      width: 100%;
+      min-height: 86px;
+      resize: vertical;
+      border: 1px solid rgba(31,183,223,.28);
+      border-radius: 0;
+      padding: 10px;
+      color: #dff7fd;
+      background: #040c12;
+      font: 500 .78rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      outline: none;
+      overflow-wrap: anywhere;
+    }
+
+    .result-item-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 9px;
+      margin-top: 9px;
+    }
+
+    .result-item-actions button {
+      min-height: 42px;
+      padding: 0 15px;
+      font-size: .7rem;
+    }
+
+    .item-copy-status {
+      min-height: 18px;
+      color: var(--good);
+      font-size: .72rem;
+      letter-spacing: .04em;
     }
 
     .result {
@@ -514,15 +630,18 @@
           </div>
 
           <div class="field">
-            <label for="callsign">Callsign <span>Ship / crew callsign</span></label>
-            <input
-              id="callsign"
-              name="callsign"
-              type="text"
+            <label for="callsigns">Callsigns <span>One per line, or separated by commas</span></label>
+            <textarea
+              id="callsigns"
+              name="callsigns"
+              class="callsign-input"
               autocomplete="off"
               spellcheck="false"
-              placeholder="e.g. UFN-221"
-              required>
+              placeholder="UFN-221&#10;UFN-222&#10;UFN-223"
+              required></textarea>
+            <div class="batch-hint">
+              Paste as many callsigns as needed. Blank lines are ignored and duplicate callsigns are only generated once.
+            </div>
           </div>
 
           <div class="actions">
@@ -548,23 +667,22 @@
         <div class="preview">
           <div id="idleState" class="preview-idle">
             <div class="target" aria-hidden="true"><b>Awaiting</b></div>
-            <p>Enter the connection parameters, then generate a deployment-ready EmptyEpsilon autoconnect URL.</p>
+            <p>Enter the connection parameters and one or more callsigns, then generate all deployment-ready EmptyEpsilon autoconnect URLs at once.</p>
           </div>
 
           <div id="resultState" class="result">
-            <div class="result-label">Autoconnect URL // Ready</div>
-            <textarea id="generatedLink" class="link-box" readonly aria-label="Generated autoconnect URL"></textarea>
+            <div class="result-label">Autoconnect URLs // Ready</div>
 
-            <div class="result-actions">
-              <button class="primary" id="copyButton" type="button">Copy Link</button>
-              <button class="secondary" id="selectButton" type="button">Select All</button>
+            <div class="result-summary">
+              <div id="resultCount" class="result-count">0 links generated</div>
+              <div class="panel-number">BATCH COMPLETE</div>
             </div>
 
-            <div id="copyStatus" class="copy-status" role="status" aria-live="polite"></div>
+            <div id="resultList" class="result-list" aria-live="polite"></div>
 
             <div class="technical">
               <span><strong>Endpoint:</strong> ee.ufn.systems/autoconnect.html</span>
-              <span id="charCount">0 chars</span>
+              <span id="batchCharCount">0 total chars</span>
             </div>
           </div>
         </div>
@@ -583,16 +701,14 @@
       const form = document.getElementById("generatorForm");
       const serverAddress = document.getElementById("serverAddress");
       const serverPassword = document.getElementById("serverPassword");
-      const callsign = document.getElementById("callsign");
+      const callsigns = document.getElementById("callsigns");
       const clearButton = document.getElementById("clearButton");
-      const copyButton = document.getElementById("copyButton");
-      const selectButton = document.getElementById("selectButton");
-      const generatedLink = document.getElementById("generatedLink");
       const idleState = document.getElementById("idleState");
       const resultState = document.getElementById("resultState");
+      const resultList = document.getElementById("resultList");
+      const resultCount = document.getElementById("resultCount");
+      const batchCharCount = document.getElementById("batchCharCount");
       const errorMessage = document.getElementById("errorMessage");
-      const copyStatus = document.getElementById("copyStatus");
-      const charCount = document.getElementById("charCount");
 
       function showError(message) {
         errorMessage.textContent = message;
@@ -604,94 +720,169 @@
         errorMessage.style.display = "none";
       }
 
-      function setResult(url) {
-        generatedLink.value = url;
-        idleState.style.display = "none";
-        resultState.style.display = "flex";
-        charCount.textContent = `${url.length} chars`;
-        copyStatus.textContent = "";
+      function parseCallsigns(raw) {
+        const parts = raw
+          .split(/[
+,]+/)
+          .map(value => value.trim())
+          .filter(Boolean);
+
+        const seen = new Set();
+        return parts.filter(value => {
+          const key = value.toLowerCase();
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
       }
 
-      function buildUrl() {
-        clearError();
-
-        const address = serverAddress.value.trim();
-        const password = serverPassword.value;
-        const shipCallsign = callsign.value.trim();
-
-        if (!address) {
-          showError("Server address is required.");
-          serverAddress.focus();
-          return null;
-        }
-
-        if (!shipCallsign) {
-          showError("Callsign is required.");
-          callsign.focus();
-          return null;
-        }
-
+      function buildUrl(address, password, shipCallsign) {
         const params = new URLSearchParams();
         params.set("serveraddress", address);
         params.set("server_password", password);
         params.set("callsign", shipCallsign);
-
         return `${BASE_URL}?${params.toString()}`;
       }
 
-      async function copyText(text) {
+      async function copyText(text, textarea) {
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(text);
-          return;
+          return true;
         }
 
-        generatedLink.focus();
-        generatedLink.select();
+        textarea.focus();
+        textarea.select();
         const copied = document.execCommand("copy");
         if (!copied) throw new Error("Copy unavailable");
+        return true;
+      }
+
+      function makeResultItem(callSign, url, index) {
+        const item = document.createElement("section");
+        item.className = "result-item";
+
+        const head = document.createElement("div");
+        head.className = "result-item-head";
+
+        const name = document.createElement("div");
+        name.className = "result-callsign";
+        name.textContent = callSign;
+
+        const number = document.createElement("div");
+        number.className = "result-index";
+        number.textContent = String(index + 1).padStart(2, "0");
+
+        head.append(name, number);
+
+        const textarea = document.createElement("textarea");
+        textarea.className = "result-url";
+        textarea.readOnly = true;
+        textarea.value = url;
+        textarea.setAttribute("aria-label", `Autoconnect URL for ${callSign}`);
+
+        const actions = document.createElement("div");
+        actions.className = "result-item-actions";
+
+        const copyButton = document.createElement("button");
+        copyButton.type = "button";
+        copyButton.className = "primary";
+        copyButton.textContent = "Copy Link";
+
+        const selectButton = document.createElement("button");
+        selectButton.type = "button";
+        selectButton.className = "secondary";
+        selectButton.textContent = "Select";
+
+        const status = document.createElement("span");
+        status.className = "item-copy-status";
+        status.setAttribute("role", "status");
+        status.setAttribute("aria-live", "polite");
+
+        copyButton.addEventListener("click", async () => {
+          try {
+            await copyText(url, textarea);
+            status.textContent = "COPIED";
+            copyButton.textContent = "Copied";
+            window.setTimeout(() => {
+              copyButton.textContent = "Copy Link";
+              status.textContent = "";
+            }, 1800);
+          } catch {
+            textarea.focus();
+            textarea.select();
+            status.textContent = "SELECTED — CTRL+C / CMD+C";
+          }
+        });
+
+        selectButton.addEventListener("click", () => {
+          textarea.focus();
+          textarea.select();
+          status.textContent = "SELECTED";
+        });
+
+        actions.append(copyButton, selectButton, status);
+        item.append(head, textarea, actions);
+        return item;
+      }
+
+      function renderResults(entries) {
+        resultList.replaceChildren();
+
+        let totalChars = 0;
+        entries.forEach((entry, index) => {
+          totalChars += entry.url.length;
+          resultList.appendChild(makeResultItem(entry.callsign, entry.url, index));
+        });
+
+        resultCount.textContent = `${entries.length} ${entries.length === 1 ? "link" : "links"} generated`;
+        batchCharCount.textContent = `${totalChars} total chars`;
+
+        idleState.style.display = "none";
+        resultState.style.display = "flex";
       }
 
       form.addEventListener("submit", (event) => {
         event.preventDefault();
-        const url = buildUrl();
-        if (url) setResult(url);
+        clearError();
+
+        const address = serverAddress.value.trim();
+        const password = serverPassword.value;
+        const ships = parseCallsigns(callsigns.value);
+
+        if (!address) {
+          showError("Server address is required.");
+          serverAddress.focus();
+          return;
+        }
+
+        if (!ships.length) {
+          showError("Enter at least one callsign.");
+          callsigns.focus();
+          return;
+        }
+
+        const entries = ships.map(callSign => ({
+          callsign: callSign,
+          url: buildUrl(address, password, callSign)
+        }));
+
+        renderResults(entries);
       });
 
       clearButton.addEventListener("click", () => {
         form.reset();
         clearError();
-        generatedLink.value = "";
+        resultList.replaceChildren();
         resultState.style.display = "none";
         idleState.style.display = "block";
-        copyStatus.textContent = "";
-        charCount.textContent = "0 chars";
+        resultCount.textContent = "0 links generated";
+        batchCharCount.textContent = "0 total chars";
+        callsigns.value = "";
         serverAddress.focus();
       });
 
-      copyButton.addEventListener("click", async () => {
-        if (!generatedLink.value) return;
-
-        try {
-          await copyText(generatedLink.value);
-          copyStatus.textContent = "LINK COPIED TO CLIPBOARD";
-        } catch {
-          generatedLink.focus();
-          generatedLink.select();
-          copyStatus.textContent = "LINK SELECTED — COPY WITH CTRL+C / CMD+C";
-        }
-      });
-
-      selectButton.addEventListener("click", () => {
-        generatedLink.focus();
-        generatedLink.select();
-        copyStatus.textContent = "LINK SELECTED";
-      });
-
-      [serverAddress, serverPassword, callsign].forEach((input) => {
-        input.addEventListener("input", () => {
-          clearError();
-          copyStatus.textContent = "";
-        });
+      [serverAddress, serverPassword, callsigns].forEach((input) => {
+        input.addEventListener("input", clearError);
       });
     })();
   </script>
