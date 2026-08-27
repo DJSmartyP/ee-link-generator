@@ -3,25 +3,29 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#05080d">
+  <meta name="theme-color" content="#030812">
   <title>UFN Systems // Autoconnect Generator</title>
   <style>
     :root {
-      --bg: #05080d;
-      --bg2: #071019;
-      --panel: rgba(8, 17, 26, .94);
-      --panel2: rgba(10, 25, 37, .92);
-      --cyan: #1fb7df;
-      --cyan2: #70d8f1;
-      --cyan3: #0d7192;
-      --text: #e9f7fb;
-      --muted: #7d9aa7;
-      --line: rgba(31,183,223,.42);
-      --line-strong: rgba(31,183,223,.78);
-      --good: #72e8b7;
-      --warn: #f3c763;
-      --danger: #ff8e8e;
-      --shadow: 0 0 0 1px rgba(31,183,223,.08), 0 24px 60px rgba(0,0,0,.5);
+      --void: #02060c;
+      --navy-950: #050b15;
+      --navy-900: #07111e;
+      --navy-850: #091727;
+      --navy-800: #0c1d30;
+      --navy-700: #132c46;
+      --gold: #d5a84d;
+      --gold-bright: #f1cd7a;
+      --gold-dim: rgba(213, 168, 77, .18);
+      --gold-line: rgba(213, 168, 77, .42);
+      --cyan: #63c7df;
+      --cyan-dim: rgba(99, 199, 223, .16);
+      --text: #edf3f6;
+      --muted: #8799a7;
+      --dim: #5b6d7b;
+      --good: #6ed9ad;
+      --danger: #ff9696;
+      --panel: rgba(6, 15, 27, .96);
+      --panel-soft: rgba(10, 24, 40, .94);
     }
 
     * { box-sizing: border-box; }
@@ -34,10 +38,10 @@
       color: var(--text);
       font-family: "Arial Narrow", "Roboto Condensed", "Segoe UI", Arial, sans-serif;
       background:
-        radial-gradient(circle at 70% 8%, rgba(31,183,223,.055), transparent 28rem),
-        linear-gradient(180deg, rgba(2,5,9,.66), rgba(3,7,12,.96)),
-        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.012) 3px 4px),
-        #03070b;
+        radial-gradient(circle at 80% 7%, rgba(99, 199, 223, .055), transparent 30rem),
+        radial-gradient(circle at 15% 30%, rgba(213, 168, 77, .035), transparent 28rem),
+        linear-gradient(180deg, rgba(2, 6, 12, .55), rgba(2, 6, 12, .98)),
+        var(--void);
       overflow-x: hidden;
     }
 
@@ -46,184 +50,222 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
+      opacity: .4;
       background:
-        linear-gradient(90deg, transparent 49.8%, rgba(31,183,223,.025) 50%, transparent 50.2%),
-        linear-gradient(0deg, transparent 49.8%, rgba(31,183,223,.018) 50%, transparent 50.2%);
-      background-size: 88px 88px;
-      opacity: .45;
+        linear-gradient(90deg, transparent 49.7%, rgba(213, 168, 77, .025) 50%, transparent 50.3%),
+        linear-gradient(0deg, transparent 49.7%, rgba(99, 199, 223, .018) 50%, transparent 50.3%);
+      background-size: 96px 96px;
+      mask-image: linear-gradient(180deg, #000, transparent 82%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .35;
+      background: repeating-linear-gradient(0deg, transparent 0 4px, rgba(255,255,255,.008) 4px 5px);
     }
 
     .shell {
-      width: min(1280px, calc(100% - 28px));
+      position: relative;
+      z-index: 1;
+      width: min(1320px, calc(100% - 28px));
       margin: 0 auto;
-      padding: 22px 0 48px;
+      padding: 18px 0 42px;
     }
 
     .topbar {
+      min-height: 128px;
       display: grid;
-      grid-template-columns: auto 1fr auto;
-      gap: 22px;
+      grid-template-columns: 122px minmax(0, 1fr) auto;
       align-items: center;
-      min-height: 118px;
-      border-top: 1px solid rgba(31,183,223,.2);
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(6,12,19,.6), rgba(4,8,13,.35));
+      gap: 22px;
       position: relative;
       overflow: hidden;
+      border-top: 1px solid rgba(213,168,77,.3);
+      border-bottom: 1px solid var(--gold-line);
+      background:
+        linear-gradient(90deg, rgba(213,168,77,.055), transparent 20%),
+        linear-gradient(180deg, rgba(10,24,40,.74), rgba(4,10,18,.5));
+    }
+
+    .topbar::before {
+      content: "";
+      position: absolute;
+      left: 122px;
+      right: 28%;
+      bottom: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), rgba(213,168,77,.22), transparent);
+      box-shadow: 0 0 14px rgba(213,168,77,.22);
     }
 
     .topbar::after {
-      content: "";
+      content: "UFN SYSTEMS // AUTHENTICATED NETWORK UTILITY";
       position: absolute;
-      height: 3px;
-      left: 120px;
-      right: 34%;
-      bottom: -1px;
-      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-      box-shadow: 0 0 18px rgba(31,183,223,.8);
+      right: 7px;
+      top: 9px;
+      color: rgba(213,168,77,.28);
+      font: 700 .57rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      letter-spacing: .15em;
     }
 
-    .ufn-mark {
-      width: 104px;
+    .logo-cell {
       height: 104px;
       display: grid;
       place-items: center;
+      border-right: 1px solid rgba(213,168,77,.34);
       position: relative;
-      color: white;
-      filter: drop-shadow(0 0 11px rgba(31,183,223,.35));
     }
 
-    .ufn-mark::before,
-    .ufn-mark::after {
+    .logo-cell::after {
       content: "";
       position: absolute;
-      border: 2px solid #dbe8ed;
-      transform: rotate(45deg);
+      right: -1px;
+      bottom: 0;
+      width: 24px;
+      height: 3px;
+      background: var(--gold);
     }
 
-    .ufn-mark::before {
-      width: 56px;
-      height: 56px;
-      border-width: 3px;
+    .ufn-logo {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      border-radius: 50%;
+      filter: drop-shadow(0 0 12px rgba(99,199,223,.12));
     }
 
-    .ufn-mark::after {
-      width: 76px;
-      height: 76px;
-      border-color: rgba(31,183,223,.55);
-    }
-
-    .ufn-mark span {
-      font-family: "Segoe UI", Arial, sans-serif;
-      font-size: 1.18rem;
-      font-weight: 900;
-      letter-spacing: .1em;
-      z-index: 2;
-      transform: translateX(2px);
-    }
+    .identity { min-width: 0; }
 
     .identity small,
     .eyebrow,
     label,
     .result-label,
-    .status-chip {
+    .status-chip,
+    .ip-status {
       text-transform: uppercase;
       letter-spacing: .13em;
     }
 
     .identity small {
       display: block;
-      color: var(--muted);
-      font-size: .72rem;
+      color: var(--gold);
+      font-size: .68rem;
+      font-weight: 850;
       margin-bottom: 8px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(1.6rem, 3vw, 3rem);
+      font-size: clamp(1.75rem, 3.3vw, 3.2rem);
       line-height: .95;
-      font-weight: 850;
-      letter-spacing: -.03em;
+      font-weight: 900;
+      letter-spacing: -.035em;
       text-transform: uppercase;
     }
 
+    .subline {
+      margin-top: 9px;
+      color: var(--muted);
+      font: 650 .72rem/1.2 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
     .status-chip {
-      min-width: 188px;
-      border-left: 1px solid var(--line);
-      padding: 10px 0 10px 24px;
-      color: var(--cyan2);
-      font-size: .76rem;
+      min-width: 198px;
+      border-left: 1px solid rgba(213,168,77,.3);
+      padding: 14px 4px 14px 24px;
+      color: var(--muted);
+      font-size: .67rem;
       text-align: right;
     }
 
     .status-chip strong {
-      display: block;
-      color: var(--text);
-      font-size: 1rem;
-      margin-top: 6px;
-      letter-spacing: .08em;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      margin-top: 7px;
+      color: var(--cyan);
+      font-size: .91rem;
+      letter-spacing: .1em;
+    }
+
+    .status-chip strong::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px rgba(99,199,223,.75);
     }
 
     .layout {
       display: grid;
-      grid-template-columns: 1.05fr .95fr;
+      grid-template-columns: 1.03fr .97fr;
       gap: 22px;
-      margin-top: 26px;
+      margin-top: 24px;
       align-items: start;
     }
 
     .panel {
       position: relative;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(213,168,77,.38);
       background:
-        linear-gradient(145deg, rgba(13,33,47,.72), rgba(5,13,21,.88)),
-        var(--panel);
-      box-shadow: var(--shadow);
+        linear-gradient(140deg, rgba(19,44,70,.32), transparent 43%),
+        linear-gradient(180deg, var(--panel-soft), var(--panel));
+      box-shadow: 0 24px 70px rgba(0,0,0,.44);
       overflow: hidden;
-    }
-
-    .panel::before,
-    .panel::after {
-      content: "";
-      position: absolute;
-      width: 34px;
-      height: 34px;
-      pointer-events: none;
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
     }
 
     .panel::before {
-      left: -1px; top: -1px;
-      border-left: 3px solid var(--cyan);
-      border-top: 3px solid var(--cyan);
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 56px;
+      bottom: 22px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--gold), transparent 72%);
     }
 
     .panel::after {
-      right: -1px; bottom: -1px;
-      border-right: 3px solid var(--cyan);
-      border-bottom: 3px solid var(--cyan);
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 56px;
+      height: 2px;
+      background: var(--gold);
     }
 
     .panel-head {
       min-height: 56px;
       padding: 15px 18px 13px;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid rgba(213,168,77,.32);
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      background: linear-gradient(90deg, rgba(31,183,223,.08), transparent 70%);
+      background:
+        linear-gradient(90deg, rgba(213,168,77,.1), transparent 48%),
+        rgba(5,13,24,.52);
     }
 
     .eyebrow {
-      color: var(--cyan2);
-      font-size: .72rem;
-      font-weight: 800;
+      color: var(--gold-bright);
+      font-size: .7rem;
+      font-weight: 900;
     }
 
     .panel-number {
-      color: rgba(112,216,241,.38);
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: .75rem;
+      color: rgba(99,199,223,.55);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .7rem;
+      letter-spacing: .08em;
     }
 
     form { padding: 20px; }
@@ -235,9 +277,9 @@
       justify-content: space-between;
       gap: 12px;
       margin-bottom: 8px;
-      color: #cfeef6;
-      font-size: .74rem;
-      font-weight: 800;
+      color: #dde6ea;
+      font-size: .71rem;
+      font-weight: 900;
     }
 
     label span {
@@ -251,30 +293,78 @@
     .callsign-input {
       width: 100%;
       min-height: 52px;
-      border: 1px solid rgba(31,183,223,.48);
+      border: 1px solid rgba(213,168,77,.3);
+      border-left: 3px solid rgba(213,168,77,.72);
       border-radius: 0;
       padding: 12px 14px;
       color: var(--text);
       background:
-        linear-gradient(90deg, rgba(31,183,223,.055), transparent 35%),
-        #06101a;
+        linear-gradient(90deg, rgba(213,168,77,.045), transparent 28%),
+        #06101d;
       outline: none;
       font: 600 16px/1.2 "Segoe UI", Arial, sans-serif;
       transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
     }
 
     input::placeholder,
-    .callsign-input::placeholder { color: #54707d; }
+    .callsign-input::placeholder { color: #536879; }
 
     input:focus,
     .callsign-input:focus {
-      border-color: var(--cyan2);
-      box-shadow: inset 3px 0 0 var(--cyan), 0 0 0 2px rgba(31,183,223,.09);
-      background: #071521;
+      border-color: var(--gold-bright);
+      border-left-color: var(--gold-bright);
+      box-shadow: 0 0 0 2px rgba(213,168,77,.09);
+      background: #081524;
     }
 
-    .actions,
-    .result-actions {
+    .server-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .callsign-input {
+      min-height: 128px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .batch-hint {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: .74rem;
+      line-height: 1.45;
+    }
+
+    .ip-status {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 18px;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: .62rem;
+      font-weight: 850;
+    }
+
+    .ip-status::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      flex: 0 0 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 7px rgba(99,199,223,.6);
+    }
+
+    .ip-status.error-state { color: #e8b3ab; }
+    .ip-status.error-state::before {
+      background: var(--danger);
+      box-shadow: none;
+    }
+
+    .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
@@ -282,44 +372,41 @@
 
     button {
       min-height: 48px;
-      border: 1px solid var(--line-strong);
+      border: 1px solid rgba(213,168,77,.72);
       border-radius: 0;
       padding: 0 20px;
       cursor: pointer;
-      font: 800 .78rem/1 "Segoe UI", Arial, sans-serif;
+      font: 900 .73rem/1 "Segoe UI", Arial, sans-serif;
       text-transform: uppercase;
       letter-spacing: .1em;
-      transition: transform .08s ease, background .15s ease, color .15s ease, box-shadow .15s ease;
+      transition: transform .08s ease, background .15s ease, color .15s ease, box-shadow .15s ease, opacity .15s ease;
     }
 
-    button:active { transform: translateY(1px); }
+    button:disabled { opacity: .55; cursor: wait; }
+    button:active:not(:disabled) { transform: translateY(1px); }
 
     .primary {
-      color: #031017;
-      background: linear-gradient(180deg, #77ddf2, #24a9cf);
-      box-shadow: 0 0 18px rgba(31,183,223,.16);
+      color: #07111f;
+      background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+      box-shadow: 0 0 18px rgba(213,168,77,.12);
     }
 
-    .primary:hover {
-      background: linear-gradient(180deg, #9aeafa, #3db9dd);
-      box-shadow: 0 0 22px rgba(31,183,223,.28);
+    .primary:hover:not(:disabled) {
+      background: linear-gradient(180deg, #f7d991, #deb45e);
+      box-shadow: 0 0 22px rgba(213,168,77,.2);
     }
 
     .secondary {
-      color: var(--cyan2);
-      background: rgba(8,26,38,.82);
+      color: var(--gold-bright);
+      background: rgba(7,18,31,.94);
     }
 
-    .secondary:hover { background: rgba(13,43,59,.95); }
+    .secondary:hover:not(:disabled) { background: rgba(19,44,70,.8); }
 
-    .form-note {
-      margin: 18px 0 0;
-      color: var(--muted);
-      font-size: .8rem;
-      line-height: 1.55;
+    .detect-button {
+      min-width: 108px;
+      padding-inline: 14px;
     }
-
-    .form-note strong { color: #cfeef6; }
 
     .error {
       display: none;
@@ -328,8 +415,19 @@
       padding: 11px 13px;
       color: var(--danger);
       background: rgba(255,80,80,.055);
-      font-size: .86rem;
+      font-size: .84rem;
     }
+
+    .form-note {
+      margin: 18px 0 0;
+      padding-top: 14px;
+      border-top: 1px solid rgba(213,168,77,.18);
+      color: var(--muted);
+      font-size: .77rem;
+      line-height: 1.55;
+    }
+
+    .form-note strong { color: var(--gold-bright); }
 
     .preview {
       min-height: 392px;
@@ -344,158 +442,22 @@
       color: var(--muted);
     }
 
-    .target {
+    .idle-logo {
+      display: block;
       width: 132px;
       height: 132px;
-      margin: 0 auto 20px;
-      border: 1px solid rgba(31,183,223,.45);
+      object-fit: contain;
+      margin: 0 auto 18px;
       border-radius: 50%;
-      position: relative;
-      display: grid;
-      place-items: center;
-    }
-
-    .target::before,
-    .target::after {
-      content: "";
-      position: absolute;
-      inset: 17px;
-      border: 1px solid rgba(31,183,223,.25);
-      transform: rotate(45deg);
-    }
-
-    .target::after {
-      inset: 34px;
-      border-color: rgba(31,183,223,.5);
-    }
-
-    .target b {
-      color: var(--cyan2);
-      font-size: .78rem;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      z-index: 1;
+      opacity: .28;
+      filter: saturate(.7) drop-shadow(0 0 18px rgba(99,199,223,.1));
     }
 
     .preview-idle p {
       margin: 0 auto;
       max-width: 420px;
       line-height: 1.55;
-      font-size: .92rem;
-    }
-
-
-    .callsign-input {
-      width: 100%;
-      min-height: 132px;
-      resize: vertical;
-      border: 1px solid rgba(31,183,223,.48);
-      border-radius: 0;
-      padding: 12px 14px;
-      color: var(--text);
-      background:
-        linear-gradient(90deg, rgba(31,183,223,.055), transparent 35%),
-        #06101a;
-      outline: none;
-      font: 600 16px/1.45 "Segoe UI", Arial, sans-serif;
-      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
-    }
-
-    .batch-hint {
-      margin-top: 7px;
-      color: var(--muted);
-      font-size: .76rem;
-      line-height: 1.45;
-    }
-
-    .result-summary {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 11px;
-      border-bottom: 1px solid rgba(31,183,223,.25);
-    }
-
-    .result-count {
-      color: var(--text);
-      font-size: .95rem;
-      font-weight: 800;
-      letter-spacing: .04em;
-    }
-
-    .result-list {
-      display: grid;
-      gap: 12px;
-    }
-
-    .result-item {
-      border: 1px solid rgba(31,183,223,.32);
-      background:
-        linear-gradient(90deg, rgba(31,183,223,.055), transparent 42%),
-        rgba(3,11,17,.72);
-      padding: 13px;
-    }
-
-    .result-item-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 9px;
-    }
-
-    .result-callsign {
-      min-width: 0;
-      color: var(--cyan2);
-      font-size: .78rem;
-      font-weight: 900;
-      letter-spacing: .11em;
-      text-transform: uppercase;
-      overflow-wrap: anywhere;
-    }
-
-    .result-index {
-      flex: 0 0 auto;
-      color: var(--muted);
-      font: 700 .7rem/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
-
-    .result-url {
-      width: 100%;
-      height: 54px;
-      min-height: 54px;
-      resize: none;
-      border: 1px solid rgba(31,183,223,.28);
-      border-radius: 0;
-      padding: 7px 9px;
-      color: #dff7fd;
-      background: #040c12;
-      font: 500 .78rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      outline: none;
-      overflow-wrap: anywhere;
-    }
-
-    .result-item-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 9px;
-      margin-top: 9px;
-    }
-
-    .result-item-actions button {
-      min-height: 42px;
-      padding: 0 15px;
-      font-size: .7rem;
-    }
-
-    .item-copy-status {
-      min-height: 18px;
-      color: var(--good);
-      font-size: .72rem;
-      letter-spacing: .04em;
+      font-size: .9rem;
     }
 
     .result {
@@ -505,80 +467,158 @@
     }
 
     .result-label {
-      color: var(--cyan2);
-      font-size: .72rem;
-      font-weight: 800;
+      color: var(--gold-bright);
+      font-size: .68rem;
+      font-weight: 900;
       margin-bottom: 8px;
     }
 
-    .link-box {
-      width: 100%;
-      min-height: 172px;
-      resize: vertical;
-      border: 1px solid rgba(31,183,223,.42);
-      border-radius: 0;
-      padding: 14px;
-      color: #dff7fd;
-      background: #040c12;
-      font: 500 .88rem/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      outline: none;
+    .result-summary {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 11px;
+      border-bottom: 1px solid rgba(213,168,77,.22);
+    }
+
+    .result-count {
+      color: var(--text);
+      font-size: .91rem;
+      font-weight: 900;
+      letter-spacing: .04em;
+    }
+
+    .result-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .result-item {
+      border: 1px solid rgba(213,168,77,.27);
+      border-left: 2px solid var(--gold);
+      background:
+        linear-gradient(90deg, rgba(213,168,77,.052), transparent 38%),
+        rgba(3,10,18,.72);
+      padding: 10px 11px;
+    }
+
+    .result-item-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 7px;
+    }
+
+    .result-player {
+      min-width: 0;
+      color: var(--gold-bright);
+      font-size: .75rem;
+      font-weight: 900;
+      letter-spacing: .12em;
+      text-transform: uppercase;
       overflow-wrap: anywhere;
     }
 
-    .link-box:focus { border-color: var(--cyan2); }
+    .result-index {
+      flex: 0 0 auto;
+      color: rgba(99,199,223,.56);
+      font: 700 .67rem/1 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
 
-    .result-actions { margin-top: 12px; }
+    .link-line {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: stretch;
+    }
 
-    .copy-status {
-      min-height: 24px;
-      padding-top: 10px;
-      color: var(--good);
-      font-size: .8rem;
+    .result-url {
+      height: 42px;
+      min-height: 42px;
+      padding: 6px 9px;
+      border: 1px solid rgba(99,199,223,.22);
+      border-left: 2px solid rgba(99,199,223,.4);
+      background: #030a12;
+      color: #dceaf0;
+      font: 500 .78rem/1.35 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+
+    .result-url:focus {
+      border-color: rgba(213,168,77,.58);
+      border-left-color: var(--gold);
+      box-shadow: none;
+    }
+
+    .copy-button {
+      min-height: 42px;
+      height: 42px;
+      padding-inline: 16px;
+      font-size: .68rem;
+    }
+
+    .item-copy-status {
+      min-height: 15px;
+      margin-top: 5px;
+      color: var(--cyan);
+      font-size: .66rem;
       letter-spacing: .05em;
+      text-transform: uppercase;
     }
 
     .technical {
-      margin-top: 22px;
-      border-top: 1px solid var(--line);
-      padding-top: 16px;
+      margin-top: 18px;
+      border-top: 1px solid rgba(213,168,77,.18);
+      padding-top: 13px;
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: minmax(0,1fr) auto;
       gap: 12px;
       color: var(--muted);
-      font-size: .75rem;
+      font-size: .71rem;
     }
 
-    .technical strong { color: #c9dde4; }
+    .technical strong { color: #ccd8de; }
 
     footer {
       margin-top: 18px;
+      padding: 0 4px;
       display: flex;
       justify-content: space-between;
       gap: 18px;
-      color: #607783;
-      font-size: .72rem;
+      color: #586a79;
+      font-size: .67rem;
       text-transform: uppercase;
       letter-spacing: .11em;
     }
 
+    footer span:first-child { color: rgba(213,168,77,.57); }
+
     @media (max-width: 860px) {
       .layout { grid-template-columns: 1fr; }
       .status-chip { display: none; }
-      .topbar { grid-template-columns: auto 1fr; }
+      .topbar { grid-template-columns: 104px minmax(0,1fr); }
       .preview { min-height: 300px; }
     }
 
     @media (max-width: 560px) {
-      .shell { width: min(100% - 16px, 1280px); padding-top: 8px; }
-      .topbar { min-height: 92px; gap: 12px; }
-      .ufn-mark { width: 72px; height: 72px; }
-      .ufn-mark::before { width: 42px; height: 42px; }
-      .ufn-mark::after { width: 58px; height: 58px; }
-      .ufn-mark span { font-size: .88rem; }
-      .identity small { font-size: .62rem; }
+      .shell { width: min(100% - 16px, 1320px); padding-top: 8px; }
+      .topbar { min-height: 98px; gap: 12px; grid-template-columns: 78px minmax(0,1fr); }
+      .topbar::after { display: none; }
+      .topbar::before { left: 78px; right: 10%; }
+      .logo-cell { height: 80px; }
+      .ufn-logo { width: 70px; height: 70px; }
+      .identity small { font-size: .57rem; }
+      .subline { font-size: .59rem; }
       .panel-head { padding-inline: 14px; }
       form, .preview { padding: 15px; }
-      .actions button, .result-actions button { flex: 1 1 150px; }
+      .server-row, .link-line { grid-template-columns: 1fr; }
+      .detect-button, .copy-button { width: 100%; }
+      .actions button { flex: 1 1 150px; }
+      .technical { grid-template-columns: 1fr; }
       footer { flex-direction: column; gap: 6px; }
     }
   </style>
@@ -586,13 +626,16 @@
 <body>
   <main class="shell">
     <header class="topbar">
-      <div class="ufn-mark" aria-hidden="true"><span>UFN</span></div>
+      <div class="logo-cell">
+        <img class="ufn-logo" src="ufn-logo.png" alt="United Federated Navy logo">
+      </div>
       <div class="identity">
-        <small>United Federated Navy // Systems Access</small>
+        <small>United Federated Navy // Systems Division</small>
         <h1>Autoconnect Generator</h1>
+        <div class="subline">EmptyEpsilon Remote Connection Utility</div>
       </div>
       <div class="status-chip">
-        Link Service
+        Network Service
         <strong>ONLINE</strong>
       </div>
     </header>
@@ -606,20 +649,23 @@
 
         <form id="generatorForm" novalidate>
           <div class="field">
-            <label for="serverAddress">Server Address <span>IP or hostname</span></label>
-            <input
-              id="serverAddress"
-              name="serverAddress"
-              type="text"
-              autocomplete="off"
-              spellcheck="false"
-              value="192.168.1.240"
-              placeholder="e.g. 203.0.113.42"
-              required>
+            <label for="serverAddress">External Server Address <span>Detected automatically / editable</span></label>
+            <div class="server-row">
+              <input
+                id="serverAddress"
+                name="serverAddress"
+                type="text"
+                autocomplete="off"
+                spellcheck="false"
+                placeholder="Detecting public IPv4 address..."
+                required>
+              <button class="secondary detect-button" id="detectIpButton" type="button">Refresh IP</button>
+            </div>
+            <div id="ipDetectStatus" class="ip-status" role="status" aria-live="polite">PUBLIC IP // DETECTING</div>
           </div>
 
           <div class="field">
-            <label for="serverPassword">Server Password <span>Optional</span></label>
+            <label for="serverPassword">Server Password <span>Editable default</span></label>
             <input
               id="serverPassword"
               name="serverPassword"
@@ -641,7 +687,7 @@
               placeholder="Smarty"
               required></textarea>
             <div class="batch-hint">
-              Paste as many player names as needed. Each name is used as the callsign in the generated link. Blank lines are ignored and duplicate names are only generated once.
+              Paste as many player names as needed. Each name is used as the callsign value in its generated link. Blank lines are ignored and duplicate names are generated once.
             </div>
           </div>
 
@@ -653,34 +699,30 @@
           <div id="errorMessage" class="error" role="alert"></div>
 
           <p class="form-note">
-            <strong>Local processing:</strong> the generator runs entirely in your browser.
-            The values entered here are not uploaded by this page.
+            <strong>Public IP lookup:</strong> when this page opens, it asks api4.ipify.org for the viewer's external IPv4 address. The password, player names and generated links are not sent to that service and remain in the browser.
           </p>
         </form>
       </article>
 
       <article class="panel">
         <div class="panel-head">
-          <div class="eyebrow">Generated Link</div>
+          <div class="eyebrow">Connection Links</div>
           <div class="panel-number">02 // OUTPUT</div>
         </div>
 
         <div class="preview">
           <div id="idleState" class="preview-idle">
-            <div class="target" aria-hidden="true"><b>Awaiting</b></div>
-            <p>Enter the connection parameters and one or more player names, then generate all deployment-ready EmptyEpsilon autoconnect URLs at once.</p>
+            <img class="idle-logo" src="ufn-logo.png" alt="" aria-hidden="true">
+            <p>Enter one or more player names, then generate every deployment-ready EmptyEpsilon autoconnect URL at once.</p>
           </div>
 
           <div id="resultState" class="result">
             <div class="result-label">Autoconnect URLs // Ready</div>
-
             <div class="result-summary">
               <div id="resultCount" class="result-count">0 links generated</div>
               <div class="panel-number">BATCH COMPLETE</div>
             </div>
-
             <div id="resultList" class="result-list" aria-live="polite"></div>
-
             <div class="technical">
               <span><strong>Endpoint:</strong> ee.ufn.systems/autoconnect.html</span>
               <span id="batchCharCount">0 total chars</span>
@@ -691,25 +733,35 @@
     </section>
 
     <footer>
-      <span>UFN Systems // EmptyEpsilon Utility</span>
-      <span>Client-side link construction</span>
+      <span>United Federated Navy // Systems</span>
+      <span>EmptyEpsilon Connection Utility</span>
     </footer>
   </main>
 
   <script>
     (() => {
       const BASE_URL = "https://ee.ufn.systems/autoconnect.html";
+      const IP_SERVICES = [
+        "https://api4.ipify.org?format=json",
+        "https://api.ipify.org?format=json"
+      ];
+
       const form = document.getElementById("generatorForm");
       const serverAddress = document.getElementById("serverAddress");
       const serverPassword = document.getElementById("serverPassword");
       const callsigns = document.getElementById("callsigns");
       const clearButton = document.getElementById("clearButton");
+      const detectIpButton = document.getElementById("detectIpButton");
+      const ipDetectStatus = document.getElementById("ipDetectStatus");
       const idleState = document.getElementById("idleState");
       const resultState = document.getElementById("resultState");
       const resultList = document.getElementById("resultList");
       const resultCount = document.getElementById("resultCount");
       const batchCharCount = document.getElementById("batchCharCount");
       const errorMessage = document.getElementById("errorMessage");
+
+      let serverAddressManuallyEdited = false;
+      let ipLookupInProgress = false;
 
       function showError(message) {
         errorMessage.textContent = message;
@@ -719,6 +771,79 @@
       function clearError() {
         errorMessage.textContent = "";
         errorMessage.style.display = "none";
+      }
+
+      function isValidIpv4(ip) {
+        const parts = ip.split(".");
+        return parts.length === 4 && parts.every(part => {
+          if (!/^\d{1,3}$/.test(part)) return false;
+          const value = Number(part);
+          return value >= 0 && value <= 255;
+        });
+      }
+
+      async function fetchWithTimeout(url, timeoutMs = 5500) {
+        const controller = new AbortController();
+        const timer = window.setTimeout(() => controller.abort(), timeoutMs);
+        try {
+          return await fetch(url, {
+            method: "GET",
+            cache: "no-store",
+            signal: controller.signal
+          });
+        } finally {
+          window.clearTimeout(timer);
+        }
+      }
+
+      async function detectExternalIp({ force = false } = {}) {
+        ipLookupInProgress = true;
+        ipDetectStatus.classList.remove("error-state");
+        ipDetectStatus.textContent = "PUBLIC IP // DETECTING";
+        detectIpButton.disabled = true;
+        detectIpButton.textContent = "Detecting";
+
+        if (force) {
+          serverAddressManuallyEdited = false;
+        }
+
+        let detectedIp = "";
+
+        for (const service of IP_SERVICES) {
+          try {
+            const response = await fetchWithTimeout(service);
+            if (!response.ok) continue;
+            const data = await response.json();
+            const candidate = typeof data.ip === "string" ? data.ip.trim() : "";
+            if (isValidIpv4(candidate)) {
+              detectedIp = candidate;
+              break;
+            }
+          } catch (error) {
+            // Try the next service.
+          }
+        }
+
+        if (detectedIp) {
+          if (force || !serverAddressManuallyEdited || !serverAddress.value.trim()) {
+            serverAddress.value = detectedIp;
+            serverAddressManuallyEdited = false;
+            ipDetectStatus.textContent = `PUBLIC IP // DETECTED // ${detectedIp}`;
+          } else {
+            ipDetectStatus.textContent = `PUBLIC IP // ${detectedIp} // MANUAL OVERRIDE ACTIVE`;
+          }
+          serverAddress.placeholder = "External IPv4 address";
+        } else {
+          if (!serverAddress.value.trim()) {
+            serverAddress.placeholder = "Enter external IP or hostname manually";
+          }
+          ipDetectStatus.classList.add("error-state");
+          ipDetectStatus.textContent = "PUBLIC IP // AUTO-DETECTION FAILED // ENTER MANUALLY";
+        }
+
+        ipLookupInProgress = false;
+        detectIpButton.disabled = false;
+        detectIpButton.textContent = "Refresh IP";
       }
 
       function parseCallsigns(raw) {
@@ -736,28 +861,27 @@
         });
       }
 
-      function buildUrl(address, password, shipCallsign) {
+      function buildUrl(address, password, playerName) {
         const params = new URLSearchParams();
         params.set("serveraddress", address);
         params.set("server_password", password);
-        params.set("callsign", shipCallsign);
+        params.set("callsign", playerName);
         return `${BASE_URL}?${params.toString()}`;
       }
 
-      async function copyText(text, textarea) {
+      async function copyText(text, input) {
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(text);
-          return true;
+          return;
         }
 
-        textarea.focus();
-        textarea.select();
+        input.focus();
+        input.select();
         const copied = document.execCommand("copy");
         if (!copied) throw new Error("Copy unavailable");
-        return true;
       }
 
-      function makeResultItem(callSign, url, index) {
+      function makeResultItem(playerName, url, index) {
         const item = document.createElement("section");
         item.className = "result-item";
 
@@ -765,8 +889,8 @@
         head.className = "result-item-head";
 
         const name = document.createElement("div");
-        name.className = "result-callsign";
-        name.textContent = callSign;
+        name.className = "result-player";
+        name.textContent = playerName;
 
         const number = document.createElement("div");
         number.className = "result-index";
@@ -774,99 +898,88 @@
 
         head.append(name, number);
 
-        const textarea = document.createElement("textarea");
-        textarea.className = "result-url";
-        textarea.readOnly = true;
-        textarea.value = url;
-        textarea.setAttribute("aria-label", `Autoconnect URL for player ${callSign}`);
+        const linkLine = document.createElement("div");
+        linkLine.className = "link-line";
 
-        const actions = document.createElement("div");
-        actions.className = "result-item-actions";
+        const input = document.createElement("input");
+        input.type = "text";
+        input.className = "result-url";
+        input.readOnly = true;
+        input.value = url;
+        input.setAttribute("aria-label", `Autoconnect URL for player ${playerName}`);
 
         const copyButton = document.createElement("button");
         copyButton.type = "button";
-        copyButton.className = "primary";
+        copyButton.className = "primary copy-button";
         copyButton.textContent = "Copy Link";
 
-        const selectButton = document.createElement("button");
-        selectButton.type = "button";
-        selectButton.className = "secondary";
-        selectButton.textContent = "Select";
-
-        const status = document.createElement("span");
+        const status = document.createElement("div");
         status.className = "item-copy-status";
         status.setAttribute("role", "status");
         status.setAttribute("aria-live", "polite");
 
         copyButton.addEventListener("click", async () => {
           try {
-            await copyText(url, textarea);
-            status.textContent = "COPIED";
+            await copyText(url, input);
             copyButton.textContent = "Copied";
+            status.textContent = "LINK COPIED";
             window.setTimeout(() => {
               copyButton.textContent = "Copy Link";
               status.textContent = "";
-            }, 1800);
-          } catch {
-            textarea.focus();
-            textarea.select();
-            status.textContent = "SELECTED — CTRL+C / CMD+C";
+            }, 1600);
+          } catch (error) {
+            input.focus();
+            input.select();
+            status.textContent = "LINK SELECTED // CTRL+C OR CMD+C";
           }
         });
 
-        selectButton.addEventListener("click", () => {
-          textarea.focus();
-          textarea.select();
-          status.textContent = "SELECTED";
-        });
-
-        actions.append(copyButton, selectButton, status);
-        item.append(head, textarea, actions);
+        linkLine.append(input, copyButton);
+        item.append(head, linkLine, status);
         return item;
       }
 
       function renderResults(entries) {
         resultList.replaceChildren();
-
         let totalChars = 0;
+
         entries.forEach((entry, index) => {
           totalChars += entry.url.length;
-          resultList.appendChild(makeResultItem(entry.callsign, entry.url, index));
+          resultList.appendChild(makeResultItem(entry.playerName, entry.url, index));
         });
 
         resultCount.textContent = `${entries.length} ${entries.length === 1 ? "link" : "links"} generated`;
         batchCharCount.textContent = `${totalChars} total chars`;
-
         idleState.style.display = "none";
         resultState.style.display = "flex";
       }
 
-      form.addEventListener("submit", (event) => {
+      form.addEventListener("submit", event => {
         event.preventDefault();
         clearError();
 
         const address = serverAddress.value.trim();
         const password = serverPassword.value;
-        const ships = parseCallsigns(callsigns.value);
+        const players = parseCallsigns(callsigns.value);
 
         if (!address) {
-          showError("Server address is required.");
+          showError(ipLookupInProgress
+            ? "Your external IP is still being detected. Wait a moment or enter it manually."
+            : "External server address is required.");
           serverAddress.focus();
           return;
         }
 
-        if (!ships.length) {
+        if (!players.length) {
           showError("Enter at least one player name.");
           callsigns.focus();
           return;
         }
 
-        const entries = ships.map(callSign => ({
-          callsign: callSign,
-          url: buildUrl(address, password, callSign)
-        }));
-
-        renderResults(entries);
+        renderResults(players.map(playerName => ({
+          playerName,
+          url: buildUrl(address, password, playerName)
+        })));
       });
 
       clearButton.addEventListener("click", () => {
@@ -877,13 +990,28 @@
         idleState.style.display = "block";
         resultCount.textContent = "0 links generated";
         batchCharCount.textContent = "0 total chars";
-        callsigns.value = "";
-        serverAddress.focus();
+        serverAddressManuallyEdited = false;
+        detectExternalIp({ force: true });
       });
 
-      [serverAddress, serverPassword, callsigns].forEach((input) => {
+      serverAddress.addEventListener("input", () => {
+        serverAddressManuallyEdited = true;
+        clearError();
+        if (serverAddress.value.trim()) {
+          ipDetectStatus.classList.remove("error-state");
+          ipDetectStatus.textContent = "PUBLIC IP // MANUAL OVERRIDE";
+        }
+      });
+
+      detectIpButton.addEventListener("click", () => {
+        detectExternalIp({ force: true });
+      });
+
+      [serverPassword, callsigns].forEach(input => {
         input.addEventListener("input", clearError);
       });
+
+      detectExternalIp();
     })();
   </script>
 </body>

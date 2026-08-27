@@ -1,41 +1,35 @@
 # UFN Autoconnect Generator
 
-A static browser-based utility for creating EmptyEpsilon autoconnect links in this format:
+A static GitHub Pages utility for building EmptyEpsilon autoconnect links.
 
-`https://ee.ufn.systems/autoconnect.html?serveraddress=...&server_password=...&callsign=...`
+## Current features
 
-## Features
-
-- Server IP/address field
-- Server password field
-- Batch player-name entry (one per line or comma-separated; each name is sent as the `callsign` value)
-- Duplicate player names automatically removed
+- Automatically detects the viewer's public/external IPv4 address when the page opens
+- External address remains fully editable
+- Refresh IP control to re-detect the current public IPv4 address
+- Server password defaults to `sxp` but remains editable
+- Batch player-name entry, one per line or comma-separated
+- Player name is passed as the `callsign` query parameter
+- Duplicate player names are ignored
+- Compact generated-link rows
+- Individual Copy Link button for every player
 - Correct URL encoding
-- Individual copy button for every generated link
-- Mobile-friendly UFN Systems styling
-- No server-side code
-- No dependencies
-- Values are processed locally in the browser
+- UFN navy/gold Systems styling using the supplied UFN logo
+
+## Public IP lookup
+
+The page attempts to retrieve the viewer's public IPv4 address from `api4.ipify.org`, with `api.ipify.org` as a fallback. Only the public-IP lookup request is sent to that service. The server password, player names and generated URLs remain in the browser.
+
+If the lookup fails, the External Server Address field stays editable for manual entry.
 
 ## GitHub Pages
 
-1. Create a new GitHub repository.
-2. Upload `index.html` from this package to the repository root.
-3. Open **Settings → Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**.
-5. Select your main branch and `/ (root)`.
-6. Save.
+1. Upload `index.html` and `ufn-logo.png` to the root of the GitHub repository.
+2. Open **Settings → Pages**.
+3. Choose **Deploy from a branch**.
+4. Select the main branch and `/ (root)`.
+5. Save.
 
-GitHub will provide the public Pages URL.
+## Security note
 
-## Notes
-
-The generated URL includes the server password in the query string because that is how the UFN autoconnect endpoint is structured. Anyone who has the generated link can therefore read that password from the link.
-
-
-## Default values
-
-- Server address: `192.168.1.240`
-- Server password: `sxp`
-
-Both defaults remain fully editable in the form.
+The EmptyEpsilon autoconnect format places the server password directly in the generated URL. Anyone who receives the URL can read that password from the query string.
